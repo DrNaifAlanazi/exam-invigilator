@@ -13,10 +13,10 @@ import AdminDashboard from "./pages/AdminDashboard";
 import FacultyDashboard from "./pages/FacultyDashboard";
 import AdminDataImport from "./pages/AdminDataImport";
 import FacultyPreferences from "./pages/FacultyPreferences";
-import NotFound from "./pages/NotFound";
-
-// Add a Swaps page placeholder
 import FacultySwaps from "./pages/FacultySwaps";
+import FacultySchedule from "./pages/FacultySchedule";
+import FacultySettings from "./pages/FacultySettings";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +39,8 @@ const App = () => (
           <Route path="/faculty/dashboard" element={<FacultyDashboard />} />
           <Route path="/faculty/preferences" element={<FacultyPreferences />} />
           <Route path="/faculty/swaps" element={<FacultySwaps />} />
+          <Route path="/faculty/schedule" element={<FacultySchedule />} />
+          <Route path="/faculty/settings" element={<FacultySettings />} />
           
           {/* Catch-all route */}
           <Route path="*" element={<NotFound />} />
