@@ -23,14 +23,14 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col md:flex-row">
+    <div className="min-h-screen bg-background flex">
       <Sidebar 
         userRole={userRole} 
         onLogout={handleLogout}
       />
       
       <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="px-6 py-4 bg-card shadow-md z-10">
+        <header className="px-6 py-4 bg-sidebar shadow-md z-10">
           <div className="flex items-center justify-between">
             <h1 className="text-xl font-bold">{pageTitle}</h1>
             <div className="hidden md:flex items-center gap-4">
@@ -40,7 +40,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             </div>
           </div>
         </header>
-        <Separator />
+        <Separator className="bg-sidebar-border" />
         <main className="flex-1 overflow-auto p-6">
           <div className="animate-fade-in">
             {children}

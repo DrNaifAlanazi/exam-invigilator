@@ -60,13 +60,13 @@ export const Sidebar = ({ userRole, onLogout }: SidebarProps) => {
 
       <aside
         className={cn(
-          "bg-sidebar w-64 flex-shrink-0 border-r border-border transition-all duration-300 ease-in-out flex flex-col",
+          "bg-sidebar min-h-screen w-64 flex-shrink-0 border-r border-border transition-all duration-300 ease-in-out flex flex-col",
           isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         )}
       >
         <div className="p-6">
-          <h2 className="text-lg font-bold text-sidebar-foreground">Invigilation</h2>
-          <p className="text-xs text-sidebar-foreground/60">Health Informatics Dept.</p>
+          <h2 className="text-2xl font-bold text-white">Health</h2>
+          <h2 className="text-2xl font-bold text-white">Informatics</h2>
         </div>
 
         <Separator className="bg-sidebar-border" />
