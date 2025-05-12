@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 
-const Login = () => {
+const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -18,13 +18,13 @@ const Login = () => {
 
     try {
       // This is where we'll add Supabase auth later
-      console.log("Login attempt with:", email);
+      console.log("Admin login attempt with:", email);
       
       // For now, we'll simulate a successful login
       setTimeout(() => {
-        navigate("/faculty/dashboard");
+        navigate("/admin/dashboard");
         toast({
-          title: "Welcome, Faculty",
+          title: "Welcome, Administrator",
           description: "You have successfully logged in",
         });
       }, 1000);
@@ -39,8 +39,8 @@ const Login = () => {
     }
   };
 
-  const handleAdminLogin = () => {
-    navigate("/admin/login");
+  const handleBackToFaculty = () => {
+    navigate("/login");
   };
 
   return (
@@ -49,6 +49,7 @@ const Login = () => {
         <h1 className="text-5xl font-bold text-[#A1B5BE] mb-2">HEALTH</h1>
         <h1 className="text-5xl font-bold text-[#A1B5BE] mb-6">INFORMATICS</h1>
         <p className="text-xl text-[#A1B5BE]/80">Exam Invigilation Management System</p>
+        <p className="text-lg text-[#A1B5BE]/60 mt-2">Administrator Access</p>
       </div>
       
       <div className="w-full max-w-md">
@@ -58,7 +59,7 @@ const Login = () => {
               <Input
                 id="email"
                 type="email"
-                placeholder="Faculty user name"
+                placeholder="Admin user name"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="bg-sidebar border-sidebar-border h-12"
@@ -88,10 +89,10 @@ const Login = () => {
         
         <div className="mt-6 text-center">
           <button 
-            onClick={handleAdminLogin}
+            onClick={handleBackToFaculty}
             className="text-sm text-[#A1B5BE] hover:text-white"
           >
-            Admin users please click here
+            Back to faculty login
           </button>
         </div>
       </div>
@@ -99,4 +100,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default AdminLogin;

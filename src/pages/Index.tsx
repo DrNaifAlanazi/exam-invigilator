@@ -1,76 +1,98 @@
 
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  
-  const handleLoginClick = () => {
-    navigate("/login");
+  const { toast } = useToast();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      // This is where we'll add Supabase auth later
+      console.log("Login attempt with:", email);
+      
+      // For now, we'll simulate a successful login
+      setTimeout(() => {
+        navigate("/faculty/dashboard");
+        toast({
+          title: "Welcome, Faculty",
+          description: "You have successfully logged in",
+        });
+      }, 1000);
+    } catch (error) {
+      toast({
+        title: "Login failed",
+        description: "Please check your credentials and try again",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAdminLogin = () => {
+    navigate("/admin/login");
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-background to-hail-dark p-4">
-      <div className="w-full max-w-3xl text-center space-y-6">
-        <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-hail-light to-hail">
-            Exam Invigilation Management System
-          </span>
-        </h1>
-        <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-          A complete solution for managing faculty exam invigilation assignments for the Department of Health Informatics
-        </p>
-        
-        <div className="mt-8 glass-card p-8 rounded-xl">
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="space-y-4 text-left">
-              <h2 className="text-xl font-bold text-white">For Faculty</h2>
-              <ul className="space-y-2 text-gray-300">
-                <li className="flex items-center">
-                  <span className="mr-2 text-hail">✓</span>
-                  Submit availability and preferences
-                </li>
-                <li className="flex items-center">
-                  <span className="mr-2 text-hail">✓</span>
-                  View your invigilation schedule
-                </li>
-                <li className="flex items-center">
-                  <span className="mr-2 text-hail">✓</span>
-                  Request and manage duty swaps
-                </li>
-              </ul>
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+      <div className="w-full max-w-md text-center mb-8">
+        <h1 className="text-5xl font-bold text-[#A1B5BE] mb-2">HEALTH</h1>
+        <h1 className="text-5xl font-bold text-[#A1B5BE] mb-6">INFORMATICS</h1>
+        <p className="text-xl text-[#A1B5BE]/80">Exam Invigilation Management System</p>
+      </div>
+      
+      <div className="w-full max-w-md">
+        <div className="glass-card overflow-hidden p-6 rounded-xl border border-[#A1B5BE]/20">
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div className="space-y-2">
+              <Input
+                id="email"
+                type="email"
+                placeholder="Faculty user name"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-sidebar border-sidebar-border h-12"
+                required
+              />
             </div>
-            <div className="space-y-4 text-left">
-              <h2 className="text-xl font-bold text-white">For Administrators</h2>
-              <ul className="space-y-2 text-gray-300">
-                <li className="flex items-center">
-                  <span className="mr-2 text-hail">✓</span>
-                  Import exam schedules
-                </li>
-                <li className="flex items-center">
-                  <span className="mr-2 text-hail">✓</span>
-                  Assign invigilators efficiently
-                </li>
-                <li className="flex items-center">
-                  <span className="mr-2 text-hail">✓</span>
-                  Monitor and approve swap requests
-                </li>
-              </ul>
+            <div className="space-y-2">
+              <Input
+                id="password"
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="bg-sidebar border-sidebar-border h-12"
+                required
+              />
             </div>
-          </div>
-          
-          <div className="mt-8">
             <Button 
-              className="hail-gradient px-8 py-6 text-lg" 
-              onClick={handleLoginClick}
+              type="submit" 
+              className="w-full h-12 bg-[#2A4653] hover:bg-[#2A4653]/90 text-white font-medium text-lg" 
+              disabled={isLoading}
             >
-              Sign In to Dashboard
+              {isLoading ? "Signing in..." : "Sign in"}
             </Button>
-          </div>
+          </form>
         </div>
         
-        <div className="text-sm text-gray-400 mt-8">
-          &copy; 2025 Department of Health Informatics • University of Ha'il
+        <div className="mt-6 text-center">
+          <button 
+            onClick={handleAdminLogin}
+            className="text-sm text-[#A1B5BE] hover:text-white"
+          >
+            Admin users please click here
+          </button>
         </div>
       </div>
     </div>

@@ -32,7 +32,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="px-6 py-4 bg-sidebar shadow-md z-10">
           <div className="flex items-center justify-between">
-            <h1 className="text-xl font-bold">{pageTitle}</h1>
+            <h1 className="text-xl font-bold text-sidebar-foreground">{pageTitle}</h1>
             <div className="hidden md:flex items-center gap-4">
               <span className="text-sm text-muted-foreground">
                 {userRole === "admin" ? "Administrator" : "Faculty Member"}

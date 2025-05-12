@@ -8,11 +8,15 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 // Pages
 import Index from "./pages/Index";
 import Login from "./pages/Login";
+import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import FacultyDashboard from "./pages/FacultyDashboard";
 import AdminDataImport from "./pages/AdminDataImport";
 import FacultyPreferences from "./pages/FacultyPreferences";
 import NotFound from "./pages/NotFound";
+
+// Add a Swaps page placeholder
+import FacultySwaps from "./pages/FacultySwaps";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +29,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
           
           {/* Admin Routes */}
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
@@ -33,6 +38,7 @@ const App = () => (
           {/* Faculty Routes */}
           <Route path="/faculty/dashboard" element={<FacultyDashboard />} />
           <Route path="/faculty/preferences" element={<FacultyPreferences />} />
+          <Route path="/faculty/swaps" element={<FacultySwaps />} />
           
           {/* Catch-all route */}
           <Route path="*" element={<NotFound />} />

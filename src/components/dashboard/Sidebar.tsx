@@ -52,7 +52,7 @@ export const Sidebar = ({ userRole, onLogout }: SidebarProps) => {
       <Button
         variant="ghost"
         size="icon"
-        className="absolute top-4 left-4 z-50 md:hidden"
+        className="fixed top-4 left-4 z-50 md:hidden bg-sidebar hover:bg-sidebar-accent"
         onClick={toggleSidebar}
       >
         {isOpen ? <X size={20} /> : <Menu size={20} />}
@@ -60,13 +60,13 @@ export const Sidebar = ({ userRole, onLogout }: SidebarProps) => {
 
       <aside
         className={cn(
-          "bg-sidebar min-h-screen w-64 flex-shrink-0 border-r border-border transition-all duration-300 ease-in-out flex flex-col",
+          "bg-sidebar min-h-screen w-64 flex-shrink-0 border-r border-sidebar-border z-40 transition-all duration-300 ease-in-out flex flex-col",
           isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         )}
       >
         <div className="p-6">
-          <h2 className="text-2xl font-bold text-white">Health</h2>
-          <h2 className="text-2xl font-bold text-white">Informatics</h2>
+          <h2 className="text-2xl font-bold text-[#A1B5BE]">Health</h2>
+          <h2 className="text-2xl font-bold text-[#A1B5BE]">Informatics</h2>
         </div>
 
         <Separator className="bg-sidebar-border" />
@@ -80,7 +80,7 @@ export const Sidebar = ({ userRole, onLogout }: SidebarProps) => {
                   className={cn(
                     "flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md transition-colors",
                     location.pathname === link.path
-                      ? "bg-hail/20 text-white"
+                      ? "bg-[#2A4653] text-white"
                       : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground"
                   )}
                   onClick={() => setIsOpen(false)}
@@ -108,7 +108,7 @@ export const Sidebar = ({ userRole, onLogout }: SidebarProps) => {
       {/* Overlay for mobile */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 md:hidden"
+          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-30 md:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}
