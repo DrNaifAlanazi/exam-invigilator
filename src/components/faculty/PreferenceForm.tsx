@@ -15,6 +15,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { CheckCircle } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 type WeekDay = "monday" | "tuesday" | "wednesday" | "thursday" | "friday";
 
@@ -28,6 +31,13 @@ const daysOfWeek: { id: WeekDay; label: string }[] = [
 
 const timeSlots = ["9:00 AM - 11:00 AM", "12:00 PM - 2:00 PM", "3:00 PM - 5:00 PM"];
 
+// Define the schema for our form
+const formSchema = z.object({
+  maxExams: z.number().min(1).max(10)
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
 const PreferenceForm = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [preferredDays, setPreferredDays] = useState<WeekDay[]>([]);
@@ -38,8 +48,17 @@ const PreferenceForm = () => {
     thursday: [],
     friday: [],
   });
-  const [maxExams, setMaxExams] = useState<number>(2);
   const { toast } = useToast();
+
+  // Initialize the form
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      maxExams: 2
+    }
+  });
+
+  const maxExams = form.watch("maxExams");
 
   const handlePreferredDayChange = (day: WeekDay) => {
     setPreferredDays((current) => {
@@ -80,12 +99,12 @@ const PreferenceForm = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = form.handleSubmit((data) => {
     // This will be replaced with actual API call when connected to Supabase
     console.log({
       preferredDays,
       availability,
-      maxExams,
+      maxExams: data.maxExams,
     });
 
     toast({
@@ -95,7 +114,7 @@ const PreferenceForm = () => {
 
     // Reset form to step 1
     setCurrentStep(1);
-  };
+  });
 
   return (
     <div className="w-full max-w-3xl mx-auto">
@@ -215,27 +234,30 @@ const PreferenceForm = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Form>
-                <FormField
-                  name="maxExams"
-                  render={() => (
-                    <FormItem>
-                      <FormLabel>Maximum Exams Per Week</FormLabel>
-                      <FormControl>
-                        <Input 
-                          type="number"
-                          value={maxExams}
-                          onChange={(e) => setMaxExams(Number(e.target.value))}
-                          min={1}
-                          max={10}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        Set the maximum number of exams you can invigilate in a week
-                      </FormDescription>
-                    </FormItem>
-                  )}
-                />
+              <Form {...form}>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <FormField
+                    control={form.control}
+                    name="maxExams"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Maximum Exams Per Week</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="number"
+                            {...field}
+                            onChange={(e) => field.onChange(Number(e.target.value))}
+                            min={1}
+                            max={10}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Set the maximum number of exams you can invigilate in a week
+                        </FormDescription>
+                      </FormItem>
+                    )}
+                  />
+                </form>
               </Form>
             </CardContent>
             <CardFooter className="flex justify-between">
