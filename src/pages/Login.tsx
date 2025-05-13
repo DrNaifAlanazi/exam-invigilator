@@ -49,6 +49,7 @@ const Login = () => {
         <h1 className="text-5xl font-bold text-[#A1B5BE] mb-2">HEALTH</h1>
         <h1 className="text-5xl font-bold text-[#A1B5BE] mb-6">INFORMATICS</h1>
         <p className="text-xl text-[#A1B5BE]/80">Exam Invigilation Management System</p>
+        <p className="text-lg text-[#A1B5BE]/60 mt-2">Faculty Access</p>
       </div>
       
       <div className="w-full max-w-md">
