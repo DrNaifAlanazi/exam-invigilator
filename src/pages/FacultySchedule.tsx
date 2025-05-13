@@ -8,30 +8,43 @@ import { Calendar, MapPin, Users, Clock } from "lucide-react";
 const assignedExams = [
   {
     id: 1,
-    examCode: "CSE101",
-    courseTitle: "Introduction to Computer Science",
-    date: "May 15, 2024",
+    examCode: "HIIM122",
+    courseTitle: "Computer Engineering",
+    date: "May 15, 2025",
     time: "10:00 AM - 12:00 PM",
-    location: "Room 203",
-    studentCount: 45,
+    location: "Room F-190",
+    studentCount: 22,
+    preferred: true,
   },
   {
     id: 2,
-    examCode: "BIO201",
-    courseTitle: "Cell Biology",
-    date: "May 18, 2024",
+    examCode: "TTGH01",
+    courseTitle: "Medical Terminology",
+    date: "May 18, 2025",
     time: "1:00 PM - 3:00 PM",
-    location: "Lecture Hall A",
-    studentCount: 60,
+    location: "Hall A",
+    studentCount: 12,
+    preferred: false,
   },
   {
     id: 3,
-    examCode: "MATH301",
-    courseTitle: "Advanced Calculus",
-    date: "May 20, 2024",
+    examCode: "MTTQ 121",
+    courseTitle: "Math",
+    date: "May 20, 2025",
     time: "9:00 AM - 11:00 AM",
-    location: "Room 110",
-    studentCount: 35,
+    location: "Hall C",
+    studentCount: 18,
+    preferred: false,
+  },
+  {
+    id: 4,
+    examCode: "IS360",
+    courseTitle: "Healthcare Analytics",
+    date: "May 23, 2025",
+    time: "9:00 AM - 11:00 AM",
+    location: "Lab 2",
+    studentCount: 16,
+    preferred: true,
   },
 ];
 
@@ -39,27 +52,32 @@ const FacultySchedule = () => {
   return (
     <DashboardLayout userRole="faculty" pageTitle="My Schedule">
       <div className="space-y-6">
-        <Card className="glass-card bg-white shadow-md">
+        <Card className="bg-[#1A262E] border border-[#A1B5BE]/10 shadow-md">
           <CardHeader>
-            <h2 className="text-xl font-semibold text-[#1A1F2C]">My Assigned Exams</h2>
+            <h2 className="text-xl font-semibold text-white">My Assigned Exams</h2>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {assignedExams.map((exam) => (
                 <div 
                   key={exam.id} 
-                  className="p-4 border border-[#E5DEFF] rounded-lg bg-white hover:bg-[#F6F6F7] transition-colors"
+                  className={`p-4 border ${exam.preferred ? 'border-[#7E69AB]' : 'border-[#A1B5BE]/10'} rounded-lg bg-[#141E26] hover:bg-[#141E26]/90 transition-colors`}
                 >
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
-                        <Badge variant="hail" className="bg-[#9b87f5] text-white">
+                        <Badge className={exam.preferred ? "bg-[#7E69AB]" : "bg-blue-500"}>
                           {exam.examCode}
                         </Badge>
-                        <h3 className="font-medium text-[#1A1F2C]">{exam.courseTitle}</h3>
+                        {exam.preferred && (
+                          <Badge variant="outline" className="border-[#7E69AB] text-[#7E69AB]">
+                            Preferred
+                          </Badge>
+                        )}
+                        <h3 className="font-medium text-white">{exam.courseTitle}</h3>
                       </div>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-[#8E9196]">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-400">
                         <div className="flex items-center gap-1">
                           <Calendar className="h-4 w-4 text-[#9b87f5]" />
                           <span>{exam.date}</span>
