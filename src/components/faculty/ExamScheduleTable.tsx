@@ -16,9 +16,11 @@ type ExamScheduleItem = {
 
 interface ExamScheduleTableProps {
   data: ExamScheduleItem[];
+  selectedExam: number | null;
+  onSelectExam: (examId: number) => void;
 }
 
-const ExamScheduleTable = ({ data }: ExamScheduleTableProps) => {
+const ExamScheduleTable = ({ data, selectedExam, onSelectExam }: ExamScheduleTableProps) => {
   return (
     <table className="w-full text-sm text-left">
       <thead className="text-xs uppercase bg-[#141E26] text-gray-300">
@@ -37,7 +39,8 @@ const ExamScheduleTable = ({ data }: ExamScheduleTableProps) => {
         {data.map((exam) => (
           <tr 
             key={exam.id} 
-            className="border-b border-[#A1B5BE]/10 bg-[#1A262E] hover:bg-[#1A262E]/80"
+            className={`border-b ${selectedExam === exam.id ? 'border-[#7E69AB] bg-[#1A262E]/90' : 'border-[#A1B5BE]/10 bg-[#1A262E] hover:bg-[#1A262E]/80'} cursor-pointer`}
+            onClick={() => onSelectExam(exam.id)}
           >
             <td className="px-4 py-3 text-white">{exam.examCode}</td>
             <td className="px-4 py-3 text-white">{exam.subject}</td>
