@@ -2,282 +2,244 @@
 import React, { useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
+import { Clock, Calendar, Swap } from "lucide-react";
 
-// Mock data for available swap options
-const availableExams = [
+// Mock data for available swap options by date and time
+const availableSwapSlots = [
   {
-    id: 1,
-    examName: "Introduction to Health Informatics",
-    examCode: "HI101",
-    date: "2025-05-15",
-    time: "09:00 - 11:00",
-    venue: "Hall A",
-    invigilator: "Dr. Mohammed Ali",
+    date: "25/5/2025",
+    slots: [
+      {
+        time: "09:00 - 11:00",
+        invigilators: [
+          { id: 1, name: "Fatima H" },
+          { id: 2, name: "Iodao" },
+        ],
+      },
+      {
+        time: "01:00 - 03:00",
+        invigilators: [
+          { id: 3, name: "DR.Freeh Alghamdi" },
+          { id: 4, name: "Tahi sfsq" },
+          { id: 5, name: "Iodao" },
+        ],
+      },
+    ],
   },
   {
-    id: 2,
-    examName: "Medical Terminology",
-    examCode: "HI204",
-    date: "2025-05-18",
-    time: "13:00 - 15:00",
-    venue: "Hall B",
-    invigilator: "Dr. Fatima Hassan",
-  },
-  {
-    id: 3,
-    examName: "Healthcare Analytics",
-    examCode: "IS360",
-    date: "2025-05-20",
-    time: "09:00 - 11:00",
-    venue: "Lab 2",
-    invigilator: "Dr. Sarah Ahmed",
+    date: "26/5/2025",
+    slots: [
+      {
+        time: "09:00 - 11:00",
+        invigilators: [
+          { id: 6, name: "Fatima H" },
+          { id: 7, name: "Tahi sfsq" },
+          { id: 8, name: "Iodao" },
+        ],
+      },
+      {
+        time: "01:00 - 03:00",
+        invigilators: [
+          { id: 9, name: "DR.Freeh Alghamdi" },
+        ],
+      },
+    ],
   },
 ];
 
-// Mock data for my current exams
-const myExams = [
-  {
-    id: 1,
-    examName: "Data Structures",
-    examCode: "CS210",
-    date: "2025-05-21",
-    time: "13:00 - 15:00",
-    venue: "Hall B",
-  },
-  {
-    id: 2,
-    examName: "Computer Networks",
-    examCode: "IT350",
-    date: "2025-05-17",
-    time: "15:00 - 17:00",
-    venue: "Lab 3",
-  },
-];
-
-// Mock data for swap requests
-const swapRequests = [
-  {
-    id: 1,
-    examName: "Introduction to Health Informatics",
-    examCode: "HI101",
-    date: "2025-06-15",
-    time: "09:00 - 11:00",
-    venue: "Hall A",
-    status: "pending",
-  },
-  {
-    id: 2,
-    examName: "Medical Terminology",
-    examCode: "HI204",
-    date: "2025-06-18",
-    time: "13:00 - 15:00",
-    venue: "Hall B",
-    status: "accepted",
-  }
-];
+// Mock data for my current exam
+const myExam = {
+  day: "Monday",
+  date: "22/5/2025",
+  time: "09:00 - 11:00",
+  location: "F-190",
+  students: 22,
+};
 
 const FacultySwaps = () => {
-  const [selectedMyExam, setSelectedMyExam] = useState<number | null>(null);
-  const [selectedSwapExams, setSelectedSwapExams] = useState<number[]>([]);
+  const [selectedInvigilator, setSelectedInvigilator] = useState<{
+    id: number;
+    name: string;
+    date: string;
+    time: string;
+  } | null>(null);
+  const { toast } = useToast();
 
-  const handleSelectMyExam = (id: number) => {
-    setSelectedMyExam(id === selectedMyExam ? null : id);
-  };
-
-  const handleSelectSwapExam = (id: number) => {
-    setSelectedSwapExams(prev => 
-      prev.includes(id) 
-        ? prev.filter(examId => examId !== id)
-        : [...prev, id]
-    );
-  };
-
-  const handleRequestSwap = () => {
-    // In a real app, this would send the swap request to the backend
-    console.info("Requesting swap between exams:", { 
-      myExam: selectedMyExam, 
-      swapExams: selectedSwapExams 
+  const handleSelectInvigilator = (invigilator: { id: number; name: string }, date: string, time: string) => {
+    setSelectedInvigilator({
+      id: invigilator.id,
+      name: invigilator.name,
+      date,
+      time,
     });
-    
-    // Reset selections
-    setSelectedMyExam(null);
-    setSelectedSwapExams([]);
+  };
+
+  const handleConfirmSwap = () => {
+    if (selectedInvigilator) {
+      // In a real app, this would send the swap request to the backend
+      toast({
+        title: "Swap request sent",
+        description: `Your swap request with ${selectedInvigilator.name} has been submitted.`,
+      });
+      // Reset selection
+      setSelectedInvigilator(null);
+    }
   };
 
   return (
     <DashboardLayout userRole="faculty" pageTitle="Swap Requests">
       <div className="grid gap-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-white">Request New Swap</h2>
-        </div>
+        <h2 className="text-xl font-semibold text-white">Request New Swap</h2>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* My Exams */}
-          <Card className="bg-[#1A262E] border border-[#A1B5BE]/10">
-            <CardHeader>
-              <CardTitle className="text-white">My Exams</CardTitle>
-              <p className="text-sm text-gray-400">Select the exam you want to swap</p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {myExams.map((exam) => (
-                  <div 
-                    key={exam.id} 
-                    className={`p-4 border ${selectedMyExam === exam.id ? 'border-[#7E69AB]' : 'border-[#A1B5BE]/10'} 
-                      rounded-lg cursor-pointer hover:border-[#7E69AB]/60 transition-colors`}
-                    onClick={() => handleSelectMyExam(exam.id)}
-                  >
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="text-white font-medium">{exam.examName}</h3>
-                          <p className="text-sm text-gray-400">{exam.examCode}</p>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2 text-sm">
-                        <div>
-                          <p className="text-gray-400">Date</p>
-                          <p className="text-white">{exam.date}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-400">Time</p>
-                          <p className="text-white">{exam.time}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-400">Venue</p>
-                          <p className="text-white">{exam.venue}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+        <div className="grid md:grid-cols-3 gap-6">
+          {/* Schedule Table - 2/3 width */}
+          <div className="md:col-span-2">
+            <div className="bg-[#1A262E] border border-[#A1B5BE]/10 rounded-lg overflow-hidden">
+              <div className="grid grid-cols-3 text-white text-center p-4 bg-[#141E26]">
+                <div>Date</div>
+                <div>Time</div>
+                <div>Swappable Slot</div>
               </div>
-            </CardContent>
-          </Card>
-
-          {/* Available Swaps */}
-          <Card className="bg-[#1A262E] border border-[#A1B5BE]/10">
-            <CardHeader>
-              <CardTitle className="text-white">Available Swaps</CardTitle>
-              <p className="text-sm text-gray-400">Select one or more exams to request for swap</p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {availableExams.map((exam) => (
-                  <div 
-                    key={exam.id} 
-                    className={`p-4 border ${selectedSwapExams.includes(exam.id) ? 'border-[#7E69AB]' : 'border-[#A1B5BE]/10'} 
-                      rounded-lg cursor-pointer hover:border-[#7E69AB]/60 transition-colors`}
-                    onClick={() => handleSelectSwapExam(exam.id)}
-                  >
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="text-white font-medium">{exam.examName}</h3>
-                          <p className="text-sm text-gray-400">{exam.examCode}</p>
-                        </div>
+              
+              {availableSwapSlots.map((dateSlot) => (
+                <React.Fragment key={dateSlot.date}>
+                  {dateSlot.slots.map((timeSlot, timeIndex) => (
+                    <div key={`${dateSlot.date}-${timeSlot.time}`} className="grid grid-cols-3 border-t border-[#A1B5BE]/10">
+                      {/* Date column - only show on first row of each date */}
+                      <div className="flex items-center justify-center p-4 text-white">
+                        {timeIndex === 0 && (
+                          <span className="text-lg">{dateSlot.date}</span>
+                        )}
                       </div>
-                      <div className="grid grid-cols-2 gap-2 text-sm">
-                        <div>
-                          <p className="text-gray-400">Date</p>
-                          <p className="text-white">{exam.date}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-400">Time</p>
-                          <p className="text-white">{exam.time}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-400">Venue</p>
-                          <p className="text-white">{exam.venue}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-400">Invigilator</p>
-                          <p className="text-white">{exam.invigilator}</p>
-                        </div>
+                      
+                      {/* Time column */}
+                      <div className="flex items-center justify-center p-4 text-white">
+                        {timeSlot.time}
+                      </div>
+                      
+                      {/* Invigilators column */}
+                      <div className="flex flex-wrap items-center justify-center gap-2 p-4">
+                        {timeSlot.invigilators.map((invigilator) => (
+                          <button
+                            key={invigilator.id}
+                            onClick={() => handleSelectInvigilator(invigilator, dateSlot.date, timeSlot.time)}
+                            className={`px-3 py-1 rounded-full text-sm transition-colors ${
+                              selectedInvigilator?.id === invigilator.id
+                                ? "bg-[#7E69AB] text-white"
+                                : "bg-[#2A3942] text-gray-300 hover:bg-[#3A4952]"
+                            }`}
+                          >
+                            {invigilator.name}
+                          </button>
+                        ))}
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+                  ))}
+                  {/* Add separator between dates */}
+                  <Separator className="bg-[#A1B5BE]/20" />
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
 
-        <div className="flex justify-end">
-          <Button
-            onClick={handleRequestSwap}
-            disabled={!selectedMyExam || selectedSwapExams.length === 0}
-            className="bg-[#7E69AB] hover:bg-[#6E59A5] text-white"
-          >
-            Submit Swap Request
-          </Button>
-        </div>
-
-        <Separator className="bg-[#A1B5BE]/10 my-6" />
-
-        {/* My Swap Requests */}
-        <div>
-          <h2 className="text-xl font-semibold text-white mb-4">My Swap Requests</h2>
-          <div className="grid gap-4">
-            {swapRequests.map((swap) => (
-              <Card key={swap.id} className="bg-[#1A262E] border border-[#A1B5BE]/10">
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-md font-medium text-white">
-                    {swap.examName}
-                  </CardTitle>
-                  <Badge 
-                    variant={swap.status === "accepted" ? "default" : "secondary"}
-                    className={swap.status === "accepted" 
-                      ? "bg-green-500/20 text-green-500 border-green-500/20" 
-                      : "bg-yellow-500/20 text-yellow-500 border-yellow-500/20"
-                    }
-                  >
-                    {swap.status === "accepted" ? "Accepted" : "Pending"}
-                  </Badge>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid gap-1">
-                    <div className="flex justify-between">
-                      <span className="text-sm text-gray-400">Exam Code:</span>
-                      <span className="text-sm text-white">{swap.examCode}</span>
+          {/* Selection Summary - 1/3 width */}
+          <div>
+            <div className="sticky top-4 space-y-4">
+              {/* My Exam Card */}
+              <Card className="bg-[#1A262E] border border-[#A1B5BE]/10">
+                <CardContent className="p-6 relative">
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <div className="text-white font-medium">{myExam.day}</div>
+                      <div className="text-white">{myExam.date}</div>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-gray-400">Date:</span>
-                      <span className="text-sm text-white">{swap.date}</span>
+                    <div className="space-y-2 mt-2">
+                      <div className="flex justify-between items-center">
+                        <div className="text-gray-400 flex items-center gap-1">
+                          <Clock className="h-4 w-4" /> Time
+                        </div>
+                        <div className="text-white">{myExam.time}</div>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <div className="text-gray-400">Location</div>
+                        <div className="text-white">{myExam.location}</div>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <div className="text-gray-400">Students</div>
+                        <div className="text-white">{myExam.students}</div>
+                      </div>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-gray-400">Time:</span>
-                      <span className="text-sm text-white">{swap.time}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-gray-400">Venue:</span>
-                      <span className="text-sm text-white">{swap.venue}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-4 flex justify-end space-x-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      className="border-[#A1B5BE]/10 text-gray-300 hover:text-white hover:bg-[#1A262E]/80"
-                    >
-                      Cancel Request
-                    </Button>
-                    <Button 
-                      size="sm" 
-                      className="bg-[#7E69AB] hover:bg-[#6E59A5] text-white"
-                    >
-                      View Details
-                    </Button>
                   </div>
                 </CardContent>
               </Card>
-            ))}
+
+              {/* Arrow indicator */}
+              <div className="flex justify-center">
+                <div className="h-10 border-l-2 border-[#7E69AB]"></div>
+              </div>
+
+              {/* Selected Swap Card */}
+              {selectedInvigilator ? (
+                <>
+                  <Card className="bg-[#1A262E] border border-[#7E69AB]">
+                    <CardContent className="p-6 relative">
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <div className="text-white font-medium">Selected Slot</div>
+                          <div className="text-white">{selectedInvigilator.date}</div>
+                        </div>
+                        <div className="space-y-2 mt-2">
+                          <div className="flex justify-between items-center">
+                            <div className="text-gray-400 flex items-center gap-1">
+                              <Clock className="h-4 w-4" /> Time
+                            </div>
+                            <div className="text-white">{selectedInvigilator.time}</div>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <div className="text-gray-400">Invigilator</div>
+                            <div className="text-white">{selectedInvigilator.name}</div>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <div className="text-gray-400">Location</div>
+                            <div className="text-white">{myExam.location}</div>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <div className="text-gray-400">Students</div>
+                            <div className="text-white">{myExam.students}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Button
+                    onClick={handleConfirmSwap}
+                    className="w-full h-12 bg-[#7E69AB] hover:bg-[#6E59A5] text-white"
+                  >
+                    <Swap className="mr-2 h-4 w-4" /> Confirm Swap Request
+                  </Button>
+                </>
+              ) : (
+                <Card className="bg-[#1A262E] border border-[#A1B5BE]/10 border-dashed">
+                  <CardContent className="p-6 flex flex-col items-center justify-center min-h-[200px] text-center">
+                    <div className="rounded-full bg-[#1E2D39] p-3 mb-3">
+                      <Calendar className="h-6 w-6 text-gray-400" />
+                    </div>
+                    <p className="text-white font-medium">Select a Timeslot</p>
+                    <p className="text-gray-400 text-sm mt-1">
+                      Choose an available slot from the schedule
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
           </div>
         </div>
+
+        {/* We'll remove the existing swap requests section since we're focusing on the new design */}
       </div>
     </DashboardLayout>
   );
