@@ -48,7 +48,29 @@ const assignedExams = [
   },
 ];
 
+// Group exams by date for timeline display
+const groupExamsByDate = (exams) => {
+  const groupedExams = {};
+  
+  exams.forEach(exam => {
+    if (!groupedExams[exam.date]) {
+      groupedExams[exam.date] = [];
+    }
+    groupedExams[exam.date].push(exam);
+  });
+  
+  // Convert to array and sort by date
+  return Object.entries(groupedExams)
+    .map(([date, examsOnDate]) => ({
+      date,
+      exams: examsOnDate,
+    }))
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+};
+
 const FacultySchedule = () => {
+  const timelineData = groupExamsByDate(assignedExams);
+  
   return (
     <DashboardLayout userRole="faculty" pageTitle="My Schedule">
       <div className="space-y-6">
@@ -57,45 +79,53 @@ const FacultySchedule = () => {
             <h2 className="text-xl font-semibold text-white">My Assigned Exams</h2>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {assignedExams.map((exam) => (
-                <div 
-                  key={exam.id} 
-                  className={`p-4 border ${exam.preferred ? 'border-[#7E69AB]' : 'border-[#A1B5BE]/10'} rounded-lg bg-[#141E26] hover:bg-[#141E26]/90 transition-colors`}
-                >
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <Badge className={exam.preferred ? "bg-[#7E69AB]" : "bg-blue-500"}>
-                          {exam.examCode}
-                        </Badge>
-                        {exam.preferred && (
-                          <Badge variant="outline" className="border-[#7E69AB] text-[#7E69AB]">
-                            Preferred
-                          </Badge>
-                        )}
-                        <h3 className="font-medium text-white">{exam.courseTitle}</h3>
-                      </div>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-400">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="h-4 w-4 text-[#9b87f5]" />
-                          <span>{exam.date}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Clock className="h-4 w-4 text-[#9b87f5]" />
-                          <span>{exam.time}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <MapPin className="h-4 w-4 text-[#9b87f5]" />
-                          <span>{exam.location}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Users className="h-4 w-4 text-[#9b87f5]" />
-                          <span>{exam.studentCount} Students</span>
-                        </div>
-                      </div>
+            <div className="space-y-6">
+              {timelineData.map((dayGroup, index) => (
+                <div key={dayGroup.date} className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <div className="h-6 w-6 rounded-full bg-[#7E69AB] flex items-center justify-center">
+                      <span className="text-white text-xs">{index + 1}</span>
                     </div>
+                    <h3 className="text-lg font-medium text-white">{dayGroup.date}</h3>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {dayGroup.exams.map((exam) => (
+                      <div 
+                        key={exam.id} 
+                        className={`p-4 border ${exam.preferred ? 'border-[#7E69AB]' : 'border-[#A1B5BE]/10'} rounded-lg bg-[#141E26] hover:bg-[#141E26]/90 transition-colors`}
+                      >
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2">
+                            <Badge className={exam.preferred ? "bg-[#7E69AB]" : "bg-blue-500"}>
+                              {exam.examCode}
+                            </Badge>
+                            {exam.preferred && (
+                              <Badge variant="outline" className="border-[#7E69AB] text-[#7E69AB]">
+                                Preferred
+                              </Badge>
+                            )}
+                          </div>
+                          
+                          <h4 className="font-medium text-white">{exam.courseTitle}</h4>
+                          
+                          <div className="grid gap-1 text-sm text-gray-400">
+                            <div className="flex items-center gap-1">
+                              <Clock className="h-4 w-4 text-[#9b87f5]" />
+                              <span>{exam.time}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <MapPin className="h-4 w-4 text-[#9b87f5]" />
+                              <span>{exam.location}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Users className="h-4 w-4 text-[#9b87f5]" />
+                              <span>{exam.studentCount} Students</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               ))}
