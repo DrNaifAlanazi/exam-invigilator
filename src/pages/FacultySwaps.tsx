@@ -1,11 +1,10 @@
-
 import React, { useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { Clock, Calendar, Swap } from "lucide-react";
+import { Clock, Calendar, ArrowLeft, ArrowRight } from "lucide-react";
 
 // Mock data for available swap options by date and time
 const availableSwapSlots = [
@@ -219,7 +218,7 @@ const FacultySwaps = () => {
                     onClick={handleConfirmSwap}
                     className="w-full h-12 bg-[#7E69AB] hover:bg-[#6E59A5] text-white"
                   >
-                    <Swap className="mr-2 h-4 w-4" /> Confirm Swap Request
+                    <ArrowRight className="mr-2 h-4 w-4" /> Confirm Swap Request
                   </Button>
                 </>
               ) : (
